@@ -31,10 +31,11 @@
     </div>
 
     <div class="container">
-        <div class="row" id="movie-content">
+        <div class="row justify-content-center" id="movie-content">
+            <div class="loader mb-5 mt-5"></div> 
             <script id="movie-card-template" type="x-tmpl-mustache">
                 <div class="mt-5 col-3 movie-card">
-                    <div class="card">
+                    <div class="card" data-id="{{id}}">
                         <img src="{{movieImgURL}}" class="card-img-top" alt="{{movieName}} poster">
                         <div class="card-body">
                           <h5 class="card-title text-truncate text-center"> {{movieName}} </h5>
@@ -46,16 +47,17 @@
         </div>
 
         <dialog id="moviePopup">
+            <button class="close-button float-end">&times;</button>
             <div class="row" id="popup-content">
-                <script type="x-tmpl-mustache">
-                    <div class="col-6">
+                <script id="movie-modal-template" type="x-tmpl-mustache">
+                    <div class="col-4 popup-img">
                         <img src="{{movieImgURL}}" class="img-fluid" alt="movie img">
                     </div>
 
-                    <div class="col-6">
-                        <h5>{{movieName}}</h5>
-                        <h5>IMDB Rating: {{movieRating}}</h5>
-                        <p>{{movieDescription}}</p>
+                    <div class="col-8 popup-info">
+                        <h2 class="fw-bold">{{movieName}}</h2>
+                        <h4>IMDB Rating: {{movieRating}} ({{totalVotes}} votes)</h4>
+                        <p class="mt-5 fs-4">{{overview}}</p>
                     </div>
                 </script>
             </div>

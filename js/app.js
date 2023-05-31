@@ -1,9 +1,6 @@
 const movieModel = {
   currentPage: 1,
 
-  init: function () {
-  },
-
   fetchData: function (pageNumber) {
     return new Promise((resolve, reject) => {
         const dataKey = `data${pageNumber}`;
@@ -36,13 +33,17 @@ const movieModel = {
         }
     })
   },
+
+  getMovieDetails: function (id) {
+    return JSON.parse(localStorage.getItem(`data${this.currentPage}`)).find(movie => movie.id == id);
+  }
 };
 
 
 const movieView = {
     render: function(data) {
-        $(".movie-card").remove();
-        
+        $(".loader").addClass("d-none");
+
         const template = $("#movie-card-template").html();
 
         data.forEach(movie => {
@@ -50,7 +51,7 @@ const movieView = {
             
             console.log("Rendering..");
 
-            const rendered = Mustache.render(template, { movieName: movie.original_title, movieRating: movie.vote_average.toFixed(1), movieImgURL: poster });
+            const rendered = Mustache.render(template, { id: movie.id, movieName: movie.original_title, movieRating: movie.vote_average.toFixed(1), movieImgURL: poster });
             $("#movie-content").append(rendered);
         });
     },
@@ -60,7 +61,34 @@ const movieView = {
             e.preventDefault();
 
             handler($(e.target).text());
+            $(".movie-card").remove();
+            $(".loader").removeClass("d-none");
         });
+    },
+
+    bindMovieClick: function(handler) {
+        $("#movie-content").on("click", ".card", function (e) {
+            e.preventDefault();
+            $(".popup-img, .popup-info").remove();
+
+            const movie = handler($(e.target).attr("data-id"));  
+
+            const poster = `https://image.tmdb.org/t/p/w300${movie.poster_path}`;
+
+            const template = $("#movie-modal-template").html();
+            const rendered = Mustache.render(template, { movieName: movie.original_title, movieRating: movie.vote_average.toFixed(1), movieImgURL: poster, totalVotes: movie.vote_count, overview: movie.overview });
+
+            $("#popup-content").append(rendered);
+            
+            const moviePopup = document.getElementById("moviePopup");
+            moviePopup.showModal();
+
+            $(document).on("click", ".close-button", function () {
+                $("#moviePopup")[0].close();
+              });
+
+        });
+
     }
 
 
@@ -68,8 +96,12 @@ const movieView = {
 
 const movieController = {
     init: function() {
-        this.selectPage(1);
-        movieView.bindPageClick(this.selectPage);
+        this.selectPage(1); // Page initilization.
+
+        movieView.bindPageClick(this.selectPage); // Binds page next/prev buttons to page selection function.
+
+        movieView.bindMovieClick(this.getMovie);
+
     },
 
     selectPage: function(order) {
@@ -80,7 +112,13 @@ const movieController = {
         }
 
         movieModel.fetchData(movieModel.currentPage).then(movieView.render);
+    },
+
+    getMovie: function(movieID) {
+        return movieModel.getMovieDetails(movieID);
     }
+
+
 }
 
 movieController.init();
