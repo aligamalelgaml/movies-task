@@ -15,16 +15,16 @@
 
 
     <div class="container">
-        <h1>Movies</h1>
+        <h1 class="fw-bold mt-4">Movies</h1>
 
-        <div class="row" id="stats-content">
-            <h4>Stats</h4>
-            <script type="x-tmpl-mustache">
-                <div>
-                    Current page: {{pageNumber}}
-                    Number of Movies: {{totalMovies}}
-                    Top rated movie: {{topMovie}}
-                    Rating: {{topRating}}
+        <div class="row mt-4" id="stats-content">
+            <h3>Stats</h3>
+            <script id="stats-template" type="x-tmpl-mustache">
+                <div class="stats">
+                    <h5>Current page: {{pageNumber}}</h5> 
+                    <h5>Number of Movies: {{totalMovies}}</h5> 
+                    <h5>Top rated movie: {{topMovie}}</h5> 
+                    <h5>Rating: {{topRating}}</h5> 
                 </div>
             </script>
         </div>

@@ -18,7 +18,7 @@ const movieModel = {
             })
             .then((data) => {
                 save(data);
-                resolve(data.results);
+                resolve({results: data.results, stats: movieModel.getpageStats(data.results)});
             })
             .catch((err) => reject(err));
     
@@ -29,31 +29,65 @@ const movieModel = {
 
         } else {
             console.log(`Retreiving ${dataKey}..`);
-            resolve(JSON.parse(localStorage.getItem(dataKey)));
+            const data = JSON.parse(localStorage.getItem(dataKey));
+            const stats = movieModel.getpageStats(data);
+
+            resolve({results: data, stats: stats});
         }
     })
   },
 
   getMovieDetails: function (id) {
     return JSON.parse(localStorage.getItem(`data${this.currentPage}`)).find(movie => movie.id == id);
+  },
+
+  getpageStats: function(movies) {
+    
+    const highestRatedMovie = movies.reduce((highest, movie) => {
+        if (movie.vote_average > highest.vote_average) {
+          return movie;
+        } else {
+          return highest;
+        }
+    });
+
+    const stats = {
+        page : this.currentPage,
+        totalMovies : movies.length,
+        topMovie: highestRatedMovie.title,
+        topMovieRating: highestRatedMovie.vote_average
+    }
+
+    return stats;
   }
 };
 
 
 const movieView = {
     render: function(data) {
+        movieView._renderMovies(data.results); // render is used as a callback function below and will lose `this` context.
+        movieView._renderStats(data.stats);
+    },
+    
+    _renderMovies: function(data) {
         $(".loader").addClass("d-none");
-
+    
         const template = $("#movie-card-template").html();
-
+    
         data.forEach(movie => {
             const poster = `https://image.tmdb.org/t/p/w200${movie.poster_path}`;
             
             console.log("Rendering..");
-
+    
             const rendered = Mustache.render(template, { id: movie.id, movieName: movie.original_title, movieRating: movie.vote_average.toFixed(1), movieImgURL: poster });
             $("#movie-content").append(rendered);
         });
+    },
+
+    _renderStats: function(stats) {
+        const template = $("#stats-template").html();
+        const rendered = Mustache.render(template, { pageNumber: stats.page, totalMovies: stats.totalMovies, topMovie: stats.topMovie, topRating: stats.topMovieRating });
+        $("#stats-content").append(rendered);
     },
 
     bindPageClick: function(handler) {
@@ -61,7 +95,7 @@ const movieView = {
             e.preventDefault();
 
             handler($(e.target).text());
-            $(".movie-card").remove();
+            $(".movie-card, .stats").remove();
             $(".loader").removeClass("d-none");
         });
     },
@@ -90,7 +124,6 @@ const movieView = {
         });
 
     }
-
 
 }
 

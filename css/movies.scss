@@ -25,3 +25,8 @@ dialog {
 .card-body, img {
     pointer-events: none;
 }
+
+#stats-content {
+    border: 2px solid black;
+    border-radius: 5px;
+}
