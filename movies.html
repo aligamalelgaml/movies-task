@@ -14,6 +14,64 @@
 <body>
 
 
+    <div class="container">
+        <h1>Movies</h1>
+
+        <div class="row" id="stats-content">
+            <h4>Stats</h4>
+            <script type="x-tmpl-mustache">
+                <div>
+                    Current page: {{pageNumber}}
+                    Number of Movies: {{totalMovies}}
+                    Top rated movie: {{topMovie}}
+                    Rating: {{topRating}}
+                </div>
+            </script>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row" id="movie-content">
+            <script type="x-tmpl-mustache">
+                <div class="col-4">
+                    <div class="card" style="width: 18rem;">
+                        <img src="{{movieImgURL}}" class="card-img-top" alt="movie poster">
+                        <div class="card-body">
+                          <h5 class="card-title"> {{movieName}} </h5>
+                          <p class="card-text text-center"> {{movieRating}} </p>
+                        </div>
+                    </div>
+                </div>
+            </script>
+        </div>
+
+        <dialog id="moviePopup">
+            <div class="row" id="popup-content">
+                <script type="x-tmpl-mustache">
+                    <div class="col-6">
+                        <img src="{{movieImgURL}}" class="img-fluid" alt="movie img">
+                    </div>
+
+                    <div class="col-6">
+                        <h3>{{movieName}}</h3>
+                        <h4>IMDB Rating: {{movieRating}}</h4>
+                        <p>{{movieDescription}}</p>
+                    </div>
+                </script>
+            </div>
+        </dialog>
+    </div>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+          <li class="page-item active"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+    </nav>
+
+
     <script src="https://unpkg.com/mustache@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
         integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
