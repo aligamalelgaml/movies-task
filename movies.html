@@ -32,12 +32,12 @@
 
     <div class="container">
         <div class="row" id="movie-content">
-            <script type="x-tmpl-mustache">
-                <div class="col-4">
-                    <div class="card" style="width: 18rem;">
-                        <img src="{{movieImgURL}}" class="card-img-top" alt="movie poster">
+            <script id="movie-card-template" type="x-tmpl-mustache">
+                <div class="mt-5 col-3 movie-card">
+                    <div class="card">
+                        <img src="{{movieImgURL}}" class="card-img-top" alt="{{movieName}} poster">
                         <div class="card-body">
-                          <h5 class="card-title"> {{movieName}} </h5>
+                          <h5 class="card-title text-truncate text-center"> {{movieName}} </h5>
                           <p class="card-text text-center"> {{movieRating}} </p>
                         </div>
                     </div>
@@ -53,8 +53,8 @@
                     </div>
 
                     <div class="col-6">
-                        <h3>{{movieName}}</h3>
-                        <h4>IMDB Rating: {{movieRating}}</h4>
+                        <h5>{{movieName}}</h5>
+                        <h5>IMDB Rating: {{movieRating}}</h5>
                         <p>{{movieDescription}}</p>
                     </div>
                 </script>
@@ -62,7 +62,7 @@
         </dialog>
     </div>
 
-    <nav aria-label="Page navigation example">
+    <nav aria-label="Page navigation example" class="mt-5">
         <ul class="pagination justify-content-center">
           <li class="page-item"><a class="page-link" href="#">Previous</a></li>
           <li class="page-item active"><a class="page-link" href="#">1</a></li>
