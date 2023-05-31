@@ -1,5 +1,5 @@
 const movieModel = {
-  pagesAvailable: [],
+  currentPage: 1,
 
   init: function () {
   },
@@ -26,9 +26,8 @@ const movieModel = {
             .catch((err) => reject(err));
     
           const save = (data) => {
-            const pageName = `data${data.page}`;
-            this.pagesAvailable.push(pageName);
-            localStorage.setItem(pageName, JSON.stringify(data.results));
+            this.currentPage = data.page;
+            localStorage.setItem(`data${data.page}`, JSON.stringify(data.results));
           };
 
         } else {
@@ -42,7 +41,6 @@ const movieModel = {
 
 const movieView = {
     render: function(data) {
-        console.log(data);
         $(".movie-card").remove();
         
         const template = $("#movie-card-template").html();
@@ -58,17 +56,10 @@ const movieView = {
     },
 
     bindPageClick: function(handler) {
-        $(".page-link").click(function (e) { 
+        $(".next, .prev").click(function (e) { 
             e.preventDefault();
 
-            $(".active").removeClass("active");
-            $(e.target).addClass("active");
-
-            const pageNumber = $(e.target).text();
-            
-            console.log(pageNumber);
-            
-            handler(pageNumber);
+            handler($(e.target).text());
         });
     }
 
@@ -81,8 +72,14 @@ const movieController = {
         movieView.bindPageClick(this.selectPage);
     },
 
-    selectPage: function(pageNumber) {
-        movieModel.fetchData(pageNumber).then(movieView.render);
+    selectPage: function(order) {
+        if (order === "Next") {
+            movieModel.currentPage += 1;
+        } else {
+            movieModel.currentPage = Math.max(movieModel.currentPage - 1, 1); // ensures that currentPage does not fall below 1.
+        }
+
+        movieModel.fetchData(movieModel.currentPage).then(movieView.render);
     }
 }
 
