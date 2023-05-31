@@ -2,7 +2,6 @@ const movieModel = {
   pagesAvailable: [],
 
   init: function () {
-    // movieModel.fetchData(1);
   },
 
   fetchData: function (pageNumber) {
@@ -10,6 +9,7 @@ const movieModel = {
         const dataKey = `data${pageNumber}`;
     
         if (!localStorage.getItem(dataKey)) {
+          console.log("API working..")
           const URL = `https://api.themoviedb.org/3/trending/movie/week?api_key=f76591075c97e67b7c90de9185ffb80a&page=${pageNumber}`;
     
           fetch(URL)
@@ -21,7 +21,7 @@ const movieModel = {
             })
             .then((data) => {
                 save(data);
-                resolve(data);
+                resolve(data.results);
             })
             .catch((err) => reject(err));
     
@@ -33,7 +33,7 @@ const movieModel = {
 
         } else {
             console.log(`Retreiving ${dataKey}..`);
-            return resolve(JSON.parse(localStorage.getItem(dataKey)));
+            resolve(JSON.parse(localStorage.getItem(dataKey)));
         }
     })
   },
@@ -41,12 +41,13 @@ const movieModel = {
 
 
 const movieView = {
-    render: function(results) {
+    render: function(data) {
+        console.log(data);
         $(".movie-card").remove();
         
         const template = $("#movie-card-template").html();
 
-        results.forEach(movie => {
+        data.forEach(movie => {
             const poster = `https://image.tmdb.org/t/p/w200${movie.poster_path}`;
             
             console.log("Rendering..");
@@ -76,6 +77,7 @@ const movieView = {
 
 const movieController = {
     init: function() {
+        this.selectPage(1);
         movieView.bindPageClick(this.selectPage);
     },
 
