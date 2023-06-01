@@ -2,6 +2,11 @@ const movieView = {
     render: function(data) {
         movieView._renderMovies(data.results); // render is used as a callback function below and will lose `this` context.
         movieView._renderStats(data.stats);
+        if(data.stats.page == 1) {
+            $(".previous-btn").addClass("d-none");
+        } else {
+            $(".previous-btn").removeClass("d-none");
+        }
     },
     
     _renderMovies: function(data) {

@@ -7,8 +7,7 @@ const movieController = {
 
         movieView.bindPageClick(this.selectPage); // Binds page next/prev buttons to page selection function.
 
-        movieView.bindMovieClick(this.getMovie);
-
+        movieView.bindMovieClick(this.getMovie); // Binds movie card click event to modal popup.
     },
 
     selectPage: function(order) {
