@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { pageUp, pageDown, fetchMoviesAsync, selectPage, selectMovieAtPage, selectIsLoading } from './moviesSlice';
-import { Stack, Container, Button, CircularProgress, Card, CardContent, Typography, Grid} from '@mui/material';
+import { Stack, Container, Button, CircularProgress, Card, CardContent, Typography, Grid, Modal, Box } from '@mui/material';
 
 export default function Movies() {
   const currentPage = useSelector(selectPage);
@@ -18,6 +18,27 @@ export default function Movies() {
     }
   }, [currentPage]);
 
+  // Modal state & functions:
+  const [open, setOpen] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [isMovieSelected, setIsMovieSelected] = useState(false);
+  const handleClose = () => setOpen(false);
+
+  useEffect(() => {
+    if (isMovieSelected) {
+      setOpen(true);
+      setIsMovieSelected(false); // Reset the flag
+    }
+  }, [isMovieSelected]);
+
+  /**
+   * Updates selected movie & opens the modal via a button click on a card.
+   */
+  const handleSelectMovie = (movie) => {
+    setSelectedMovie(movie);
+    setOpen(true)
+  }
+
 
   return (
     <>
@@ -27,6 +48,44 @@ export default function Movies() {
         {isLoading && <CircularProgress />}
       </Container>
 
+      <div>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="movie-modal-title"
+          aria-describedby="movie-modal-description"
+        >
+          <Box sx={{
+            display: "flex",
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: "45vw",
+            bgcolor: 'background.paper',
+          }}>
+            <img src={`https://image.tmdb.org/t/p/w300${selectedMovie?.poster_path}`} alt={`poster for ${selectedMovie?.title}`} />
+
+            <Stack sx={{pl: 3}}>
+              <Typography id="movie-modal-title" variant='h3' sx={{ mt: 2 }}>
+                {selectedMovie?.title}
+              </Typography>
+
+              <Typography variant='h4' sx={{ mt: 2 }}>
+                IMDB Rating: {selectedMovie?.vote_average.toFixed(2)} / 10 ({selectedMovie?.vote_count} votes)
+              </Typography>
+
+              <Typography id="movie-modal-description" variant='body1' sx={{ mt: 2 }}>
+                {selectedMovie?.overview}
+              </Typography>
+
+
+
+            </Stack>
+
+          </Box>
+        </Modal>
+      </div>
 
       <Container>
         <Grid
@@ -34,12 +93,12 @@ export default function Movies() {
           spacing={3}
           direction="row"
           wrap="wrap"
-          sx={{ marginTop: "40px" }}
+          sx={{ marginTop: "20px" }}
         >
 
           {movieData?.map((movie) =>
             <Grid item xs={3} key={movie.id}>
-              <Card sx={{ height: "100%" }}>
+              <Card onClick={() => handleSelectMovie(movie)} sx={{ height: "100%" }}>
                 <img src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`} alt={`poster for ${movie.title}`} style={{ width: "100%" }} />
 
                 <div>
@@ -60,9 +119,8 @@ export default function Movies() {
 
       <Container sx={{ marginTop: "40px" }}>
         <Stack direction={"row"} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }} gap={3}>
-          {currentPage !== 1 && <Button onClick={() => dispatch(pageDown())} variant='contained'>page down</Button>}
-          Page number: {currentPage}
-          <Button onClick={() => dispatch(pageUp())} variant='contained'>page up</Button>
+          {currentPage !== 1 && <Button onClick={() => dispatch(pageDown())} variant='contained'>Previous</Button>}
+          <Button onClick={() => dispatch(pageUp())} variant='contained'>NEXT</Button>
         </Stack>
       </Container>
     </>
