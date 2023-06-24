@@ -1,1 +1,3 @@
-# Movies task, refactored with react-redux & MUI
+# Movies task
+
+Refactored with react-redux & MUI
