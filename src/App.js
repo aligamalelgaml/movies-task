@@ -1,11 +1,10 @@
 import React from 'react';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import Movies from './features/movies/Movies';
 
 function App() {
   return (
     <div>
-      <Counter />
+      <Movies/>
     </div>
   );
 }
