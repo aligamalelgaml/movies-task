@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { pageUp, pageDown, fetchMoviesAsync, selectPage, selectMovieAtPage, selectIsLoading } from './moviesSlice';
-import { Container, Button, CircularProgress, Card, CardContent, Typography, Grid} from '@mui/material';
-import { Stack } from '@mui/system';
+import { Stack, Container, Button, CircularProgress, Card, CardContent, Typography, Grid} from '@mui/material';
 
 export default function Movies() {
   const currentPage = useSelector(selectPage);
@@ -24,7 +23,7 @@ export default function Movies() {
     <>
       {console.log(movieData)}
 
-      <Container sx={{ marginTop: "40px", display: "flex", justifyContent: "center" }}>
+      <Container sx={{ marginTop: "20px", display: "flex", justifyContent: "center" }}>
         {isLoading && <CircularProgress />}
       </Container>
 
