@@ -7,6 +7,9 @@ export default function Stats() {
     const currentPage = useSelector(selectPage);
     const movieData = useSelector(state => selectMovieAtPage(state, currentPage));
 
+    /**
+     * Retreives highest rated movie object via Array.reduce.
+     */
     const highestRatedMovie = movieData?.reduce((movie, highestRatedMovie) => {
         if (highestRatedMovie.vote_average > movie.vote_average) {
             return highestRatedMovie;

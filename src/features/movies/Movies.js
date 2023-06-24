@@ -10,40 +10,29 @@ export default function Movies() {
   const dispatch = useDispatch();
 
   /**
-   * If the movie data array does not contain an object with the new page number, it will call the fetchMoviesAsync function with the new page number.
+   * If the movie data array is undefined (i.e. no data for new page number) , it will call the fetchMoviesAsync function with the new page number.
    */
   useEffect(() => {
     if (!movieData) {
       dispatch(fetchMoviesAsync(currentPage))
-    }
+    }   // eslint-disable-next-line
   }, [currentPage]);
 
   // Modal state & functions:
   const [open, setOpen] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
-  const [isMovieSelected, setIsMovieSelected] = useState(false);
   const handleClose = () => setOpen(false);
 
-  useEffect(() => {
-    if (isMovieSelected) {
-      setOpen(true);
-      setIsMovieSelected(false); // Reset the flag
-    }
-  }, [isMovieSelected]);
-
   /**
-   * Updates selected movie & opens the modal via a button click on a card.
+   * Updates selected movie & opens the modal once a card is clicked.
    */
   const handleSelectMovie = (movie) => {
     setSelectedMovie(movie);
     setOpen(true)
   }
 
-
   return (
     <>
-      {console.log(movieData)}
-
       <Container sx={{ marginTop: "20px", display: "flex", justifyContent: "center" }}>
         {isLoading && <CircularProgress />}
       </Container>
@@ -79,10 +68,7 @@ export default function Movies() {
                 {selectedMovie?.overview}
               </Typography>
 
-
-
             </Stack>
-
           </Box>
         </Modal>
       </div>
